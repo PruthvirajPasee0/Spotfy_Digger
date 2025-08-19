@@ -1,80 +1,74 @@
-# Spotify Downloader UI
+# Spotify Digger: Local Music Downloader
 
-A Python-based web application that allows users to download Spotify tracks or playlists as MP3 files, packaged in a ZIP. Built with Flask, it integrates the Spotify API for track metadata and yt-dlp for audio downloads, featuring a responsive Bootstrap UI with a progress bar.
 
-**Live Demo**: (Add your Render URL here after deployment, e.g., `https://spotify-downloader.onrender.com`)
+## Project Overview
+
+**Spotify Digger** is a Python-based web application developed using Flask that allows users to fetch and download music from Spotify playlists or individual tracks. This project serves as an **educational and experimental demonstration** of interacting with the Spotify API and leveraging yt-dlp for media extraction.
+
 
 ## Features
-- Download single Spotify tracks or entire playlists.
-- User-friendly web interface with real-time progress tracking.
-- Outputs a ZIP file containing MP3s (192kbps quality).
-- Responsive design powered by Bootstrap.
 
-## How It Works
-1. Users enter a Spotify track URL (e.g., `https://open.spotify.com/track/...`) or playlist URL (e.g., `https://open.spotify.com/playlist/...`).
-2. The app fetches track metadata via the Spotify API.
-3. Audio is sourced from YouTube using yt-dlp and converted to MP3 with FFmpeg.
-4. Downloaded files are zipped and served to the user.
-
-## Prerequisites
-- Python 3.11+ (tested with 3.13.2)
-- FFmpeg installed (for audio conversion)
-- Spotify API credentials (Client ID and Secret)
-
-## Setup Instructions
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/GodSpeedn/Spotify-Downloader-UI.git
-   cd Spotify-Downloader-UI
-Install Dependencies:
-
-pip install -r requirements.txt
-Ensure FFmpeg is installed:
-On macOS: brew install ffmpeg
-On Ubuntu: sudo apt-get install ffmpeg
-On Windows: Download from ffmpeg.org and add to PATH.
-Add Spotify Credentials:
-Get your Client ID and Secret from Spotify Developer Dashboard.
-
-Open app.py and replace:
-python
-
-SPOTIFY_CLIENT_ID = "your_client_id"or "mine is in the file already "
-SPOTIFY_CLIENT_SECRET = "your_client_secret"
-Run the App:
+* **Track Download:** Download individual Spotify tracks.
+* **Playlist Track Listing:** List all tracks within a given Spotify playlist.
+* **Selective Playlist Download:** Choose specific songs from a playlist to download.
+* **MP3 Conversion:** Automatically converts downloaded audio to MP3 format.
+* **ZIP Packaging:** Compiles all downloaded songs into a single, convenient ZIP archive.
+* **Progress Tracking:** Provides real-time progress updates during the download process.
 
 
-
-python app.py
-Open http://127.0.0.1:5000/ in your browser.
-Usage
-Visit the web app (locally at http://127.0.0.1:5000/ or the deployed URL).
-Enter a Spotify track or playlist URL in the input field.
-Click "Download" and watch the progress bar.
-Once complete, click "Download ZIP" to get your MP3s.
-Example Inputs
-Track: https://open.spotify.com/track/2zQE8TE5BQDJA11ggnope9
-Playlist: https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M
-Deployment
-To deploy online (e.g., on Render):
+## Getting Started
+To set up and run Spotify Digger locally, follow these steps:
 
 
-Technologies Used
-Python: Core logic
-Flask: Web framework
-Spotipy: Spotify API integration
-yt-dlp: YouTube audio downloading
-FFmpeg: Audio conversion
-Bootstrap: Frontend styling
-jQuery/AJAX: Progress updates
+### Prerequisites
+* Python 3.8+
+* pip (Python package installer)
+* [FFmpeg](https://ffmpeg.org/download.html) (required by yt-dlp for audio processing and conversion). Ensure FFmpeg is installed and accessible in your system's PATH.
+
+
+### Installation
+1. **Clone the Repository:** \
+git clone https://github.com/your-username/Spotify-Digger.git \
+cd Spotify-Digger \
+
+2. **Create a Virtual Environment (Recommended):** \
+python -m venv venv \
+# On Windows \
+.\venv\Scripts\activate \
+# On macOS/Linux \
+source venv/bin/activate \
+
+3. **Install Dependencies:** \
+pip install -r requirements.txt \
+ \.
+
+4. **Set up Spotify API Credentials:**
+    * Go to the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/).
+    * Log in and create a new application.
+    * Note down your **Client ID** and **Client Secret**.
+    * Create a **.env file** in the root directory of your project (the same directory as app.py) and add the following lines, replacing the placeholders with your actual credentials: \
+      
+SPOTIFY_CLIENT_ID=your_spotify_client_id \
+SPOTIFY_CLIENT_SECRET=your_spotify_client_secret \
 
 
 
+## Usage
+1. **Run the Flask Application:** \
+python app.py \
+ \
+The application will typically run on http://127.0.0.1:5000 or http://0.0.0.0:5000.
+2. Access the Web Interface: \
+Open your web browser and navigate to the address where the application is running.
+3. **Enter Spotify URL:**
+    * **For a Playlist:** Enter the URL of a Spotify playlist. The application will then display a list of all songs in that playlist, allowing you to select individual tracks for download.
+    * **For a Single Track:** Enter the URL of a Spotify track directly to download it.
+4. Download: \
+Initiate the download, and the application will provide progress updates. Once complete, a download link for the ZIP archive will appear.
 
-Notes
 
-Legal: This is a proof-of-concept. Downloading copyrighted music may violate Spotify and YouTube terms of service—use responsibly for educational purposes.
-Limitations: Free hosting (e.g., Render) may time out on large playlists; progress is track-based, not time-based.
-Author
+## Disclaimer
 
-Narayan Rakhecha (GitHub: GodSpeedn)
+This application is developed solely for **educational purposes and as an experimental project**. It is designed to demonstrate concepts related to API interaction, web development, and media processing.
+
+**Users are solely responsible for adhering to the terms of service of Spotify, YouTube, and any other content platforms.** Downloading copyrighted material without permission may be illegal in your jurisdiction and is a violation of these platforms' terms of service. The developers of this project do not endorse or encourage any illegal activities, and are not responsible for any misuse of this software. By using this application, you acknowledge and agree to take full responsibility for your actions.
