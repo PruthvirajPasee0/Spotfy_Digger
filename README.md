@@ -1,8 +1,4 @@
-# Spotify Downloader UI
-
-A Python-based web application that allows users to download Spotify tracks or playlists as MP3 files, packaged in a ZIP. Built with Flask, it integrates the Spotify API for track metadata and yt-dlp for audio downloads, featuring a responsive Bootstrap UI with a progress bar.
-
-**Live Demo**: (Add your Render URL here after deployment, e.g., `https://spotify-downloader.onrender.com`)
+# Spotify Digger
 
 ## Features
 - Download single Spotify tracks or entire playlists.
@@ -70,11 +66,6 @@ jQuery/AJAX: Progress updates
 
 
 
-
-Notes
-
+Note:
 Legal: This is a proof-of-concept. Downloading copyrighted music may violate Spotify and YouTube terms of service—use responsibly for educational purposes.
 Limitations: Free hosting (e.g., Render) may time out on large playlists; progress is track-based, not time-based.
-Author
-
-Narayan Rakhecha (GitHub: GodSpeedn)
