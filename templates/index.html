@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Spotify Downloader</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body { padding: 50px; background-color: #f8f9fa; }
+        .container { max-width: 600px; }
+        .progress { height: 25px; margin-top: 20px; display: none; }
+        #progress-message { margin-top: 10px; }
+        .btn-primary { margin-top: 20px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="text-center mb-4">Spotify Downloader</h1>
+    <p class="text-center text-muted mb-4">Download Spotify tracks or playlists as MP3s in a ZIP file.</p>
+    <form method="POST" id="download-form">
+        <div class="mb-3">
+            <input type="text" name="spotify_url" class="form-control" placeholder="e.g., https://open.spotify.com/playlist/..." required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Download</button>
+    </form>
+    {% if error %}
+    <p class="text-danger text-center mt-3">{{ error }}</p>
+    {% endif %}
+    <div class="progress mt-3" id="progress-bar">
+        <div class="progress-bar" role="progressbar" style="width: 0%;" id="progress-fill"></div>
+    </div>
+    <p class="text-center" id="progress-message"></p>
+    <a href="/download" class="btn btn-success w-100" id="download-link" style="display: none;">Download ZIP</a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        {% if downloading %}
+            startProgress();
+        {% endif %}
+
+        $("#download-form").submit(function(e) {
+            e.preventDefault();
+            $.post('/', $(this).serialize(), function() {
+                startProgress();
+            });
+        });
+
+        function startProgress() {
+            $("#progress-bar").show();
+            $("#progress-message").text("Starting download...");
+            let interval = setInterval(function() {
+                $.get('/progress', function(data) {
+                    let percent = (data.current / data.total) * 100 || 0;
+                    $("#progress-fill").css("width", percent + "%").text(Math.round(percent) + "%");
+                    $("#progress-message").text(data.message);
+
+                    if (data.status === "done") {
+                        clearInterval(interval);
+                        $("#progress-bar").removeClass("progress-bar-animated");
+                        $("#download-link").show();
+                    } else if (data.status === "error") {
+                        clearInterval(interval);
+                        $("#progress-message").addClass("text-danger");
+                    }
+                });
+            }, 1000); // Update every second
+        }
+    });
+</script>
+</body>
+</html>
