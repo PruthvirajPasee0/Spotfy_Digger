@@ -103,15 +103,6 @@ def download_task(url):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    if request.method == 'POST':
-        url = request.form['spotify_url']
-        if not url or not ("track" in url or "playlist" in url):
-            return render_template('index.html', error="Please enter a valid Spotify track or playlist URL.")
-
-        # Start download in a separate thread
-        threading.Thread(target=download_task, args=(url,)).start()
-        return render_template('index.html', error=None, downloading=True)
-
     return render_template('index.html', error=None, downloading=False)
 
 @app.route('/progress')
@@ -124,6 +115,94 @@ def download():
         return send_file(ZIP_FILE, as_attachment=True, download_name="spotify_songs.zip")
     return "File not ready yet.", 400
 
+
+@app.route('/list_tracks', methods=['POST'])
+def list_tracks():
+    url = request.json.get('spotify_url')
+    if not url or not "playlist" in url:
+        return jsonify({"error": "Invalid playlist URL"}), 400
+
+    sp = setup_spotify()
+    try:
+        tracks = get_playlist_tracks(sp, url)
+        if not tracks:
+            return jsonify({"error": "No tracks found in the playlist or playlist is private."}), 404
+
+        # You might want to modify get_playlist_tracks to return a better format
+        # Currently, it returns "Name - Artist". Let's change it for better JSON.
+        #
+        # Let's adjust get_playlist_tracks to return a list of dictionaries,
+        # each with 'name' and 'artist' keys.
+        # This is a much better way to handle data on the frontend.
+        # Let's assume you've updated your get_playlist_tracks function for this.
+
+        # (See the updated get_playlist_tracks function below)
+        return jsonify({"tracks": tracks})
+
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+
+# Update the get_playlist_tracks function to return a list of dictionaries
+def get_playlist_tracks(sp, playlist_url):
+    playlist_id = playlist_url.split("/")[-1].split("?")[0]
+    results = sp.playlist_tracks(playlist_id)
+    # This is the key change: return a list of dictionaries
+    return [{'name': item['track']['name'], 'artist': item['track']['artists'][0]['name']} for item in results['items']]
+
+# app.py
+
+# ... (keep all your existing code)
+
+@app.route('/download_selected', methods=['POST'])
+def download_selected():
+    # The frontend will now send a JSON payload with a list of songs to download
+    selected_songs = request.json.get('songs')
+    if not selected_songs:
+        return jsonify({"error": "No songs selected for download."}), 400
+
+    # The download task needs to be updated to accept a list of song queries
+    threading.Thread(target=download_task, args=(selected_songs,)).start()
+    return jsonify({"status": "download started"}), 202
+
+# Update the download_task function to handle a list of queries
+def download_task(queries):
+    global progress
+    sp = setup_spotify()
+
+    # Reset progress
+    progress["status"] = "downloading"
+    progress["current"] = 0
+
+    # Clean up
+    if os.path.exists(DOWNLOAD_DIR):
+        shutil.rmtree(DOWNLOAD_DIR)
+    if os.path.exists(ZIP_FILE):
+        os.remove(ZIP_FILE)
+    os.makedirs(DOWNLOAD_DIR)
+
+    # Now the 'queries' is the list of tracks to download
+    tracks_to_download = [f"{track['name']} - {track['artist']}" for track in queries]
+    progress["total"] = len(tracks_to_download)
+
+    # Download songs
+    successful_downloads = 0
+    for i, query in enumerate(tracks_to_download, 1):
+        progress["current"] = i
+        progress["message"] = f"Downloading: {query}"
+        if download_song(query, DOWNLOAD_DIR):
+            successful_downloads += 1
+
+    # Create ZIP
+    if successful_downloads > 0:
+        progress["message"] = "Creating ZIP file..."
+        create_zip(DOWNLOAD_DIR, ZIP_FILE)
+        shutil.rmtree(DOWNLOAD_DIR)
+        progress["status"] = "done"
+        progress["message"] = "Download complete!"
+    else:
+        shutil.rmtree(DOWNLOAD_DIR)
+        progress["status"] = "error"
+        progress["message"] = "Failed to download any tracks."
 
 
 if __name__ == '__main__':
@@ -155,6 +234,8 @@ if __name__ == '__main__':
             'timeout': 600
         }
         StandaloneApplication(app, options).run()
+
+
 
 
 # if __name__ == '__main__':
