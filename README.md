@@ -27,20 +27,19 @@ To set up and run Spotify Digger locally, follow these steps:
 
 
 ### Installation
-1. **Clone the Repository:** \
-git clone https://github.com/your-username/Spotify-Digger.git \
-cd Spotify-Digger \
+1. **Clone the Repository:** 
+```git clone https://github.com/your-username/Spotify-Digger.git```
+``` cd Spotify-Digger ```
 
-2. **Create a Virtual Environment (Recommended):** \
-python -m venv venv \
-# On Windows \
-.\venv\Scripts\activate \
-# On macOS/Linux \
-source venv/bin/activate \
+3. **Create a Virtual Environment (Recommended):** 
+```python -m venv venv ```
+# On Windows 
+```.\venv\Scripts\activate ```
+# On macOS/Linux 
+```source venv/bin/activate```
 
-3. **Install Dependencies:** \
-pip install -r requirements.txt \
- \.
+3. **Install Dependencies:** 
+```pip install -r requirements.txt```
 
 4. **Set up Spotify API Credentials:**
     * Go to the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/).
@@ -48,22 +47,22 @@ pip install -r requirements.txt \
     * Note down your **Client ID** and **Client Secret**.
     * Create a **.env file** in the root directory of your project (the same directory as app.py) and add the following lines, replacing the placeholders with your actual credentials: \
       
-SPOTIFY_CLIENT_ID=your_spotify_client_id \
-SPOTIFY_CLIENT_SECRET=your_spotify_client_secret \
+```SPOTIFY_CLIENT_ID=your_spotify_client_id ```
+```SPOTIFY_CLIENT_SECRET=your_spotify_client_secret```
 
 
 
 ## Usage
-1. **Run the Flask Application:** \
-python app.py \
- \
+1. **Run the Flask Application:** 
+```python app.py```
+
 The application will typically run on http://127.0.0.1:5000 or http://0.0.0.0:5000.
-2. Access the Web Interface: \
+3. Access the Web Interface:
 Open your web browser and navigate to the address where the application is running.
-3. **Enter Spotify URL:**
+4. **Enter Spotify URL:**
     * **For a Playlist:** Enter the URL of a Spotify playlist. The application will then display a list of all songs in that playlist, allowing you to select individual tracks for download.
     * **For a Single Track:** Enter the URL of a Spotify track directly to download it.
-4. Download: \
+5. Download:
 Initiate the download, and the application will provide progress updates. Once complete, a download link for the ZIP archive will appear.
 
 
