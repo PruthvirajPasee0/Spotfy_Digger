@@ -4,6 +4,8 @@
 ## Project Overview
 
 **Spotify Digger** is a Python-based web application developed using Flask that allows users to fetch and download music from Spotify playlists or individual tracks. This project serves as an **educational and experimental demonstration** of interacting with the Spotify API and leveraging yt-dlp for media extraction.
+<img width="1400" height="625" alt="image" src="https://github.com/user-attachments/assets/eb4c8ad6-cc6a-461f-b4b5-0e3ab181a2cb" />
+
 
 
 ## Features
@@ -71,3 +73,6 @@ Initiate the download, and the application will provide progress updates. Once c
 This application is developed solely for **educational purposes and as an experimental project**. It is designed to demonstrate concepts related to API interaction, web development, and media processing.
 
 **Users are solely responsible for adhering to the terms of service of Spotify, YouTube, and any other content platforms.** Downloading copyrighted material without permission may be illegal in your jurisdiction and is a violation of these platforms' terms of service. The developers of this project do not endorse or encourage any illegal activities, and are not responsible for any misuse of this software. By using this application, you acknowledge and agree to take full responsibility for your actions.
+
+<img width="2560" height="1811" alt="image" src="https://github.com/user-attachments/assets/c89c5688-7cfe-491d-884d-8584db8f4539" />
+
