@@ -1,439 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify Downloader</title>
+    <title>Spotify Digger</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-        /* General Body Styles */
-        body {
-            font-family: 'Inter', sans-serif; /* Using a modern, sleek font */
-            background-color: #121212; /* Background color */
-            color: #ffffff; /* Default text color for good contrast */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh; /* Full viewport height */
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box; /* Include padding in element's total width and height */
-            overflow-x: hidden; /* Prevent horizontal scroll */
-        }
-
-        /* Main Layout for Two Columns */
-        .main-layout {
-            display: flex;
-            flex-wrap: wrap; /* Allows items to wrap to next line on smaller screens */
-            gap: 30px; /* Space between cards */
-            max-width: 1200px; /* Max width for the entire layout */
-            width: 100%;
-            justify-content: center; /* Center cards horizontally */
-            align-items: flex-start; /* Align items to the top as per image reference */
-        }
-
-        /* Card Base Styling */
-        .card {
-            background-color: rgba(30, 18, 56, 0.9); /* Darker, muted purple background for cards */
-            border-radius: 20px; /* Rounded corners */
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5); /* Soft, deep shadow */
-            padding: 40px;
-            box-sizing: border-box;
-            backdrop-filter: blur(5px); /* Frosted glass effect */
-            -webkit-backdrop-filter: blur(5px); /* Safari support */
-            border: 1px solid rgba(187, 134, 252, 0.1); /* Subtle primary border */
-            flex-grow: 1; /* Allow cards to grow */
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; /* Added transition for hover effects */
-        }
-
-        /* Card Hover Effect */
-        .card:hover {
-            transform: translateY(-5px); /* Slight lift */
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6); /* Enhanced shadow */
-            border-color: rgba(187, 134, 252, 0.3); /* Slightly more prominent border */
-        }
-
-        /* Specific Card Dimensions/Flexibility */
-        .card.main-content {
-            flex-basis: 45%; /* Occupy roughly half the width */
-            min-width: 350px; /* Minimum width before wrapping */
-            max-width: 500px;
-            text-align: center;
-            /* Added for better vertical alignment within the card itself */
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between; /* Distribute content vertically */
-        }
-
-        .features-column {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            flex-basis: 45%; /* Occupy roughly half the width */
-            min-width: 350px; /* Minimum width before wrapping */
-            max-width: 500px;
-        }
-
-        .card.feature-card {
-            padding: 30px;
-            text-align: left;
-            background-color: rgba(30, 18, 56, 0.7); /* Slightly lighter for feature cards */
-            border: 1px solid rgba(56, 33, 146, 0.2);
-        }
-
-        /* Header (H1) Styling */
-        h1 {
-            color: #bb86fc; /* Primary color */
-            margin-bottom: 15px;
-            font-size: 2.5em;
-            letter-spacing: 1px;
-            text-shadow: 0 0 10px rgba(187, 134, 252, 0.5); /* Subtle glow */
-        }
-
-        /* Paragraph Text Styling */
-        p {
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
-
-        .card.feature-card h2 {
-            color: #02dac5; /* Secondary color for feature headings */
-            font-size: 1.8em;
-            margin-bottom: 10px;
-            letter-spacing: 0.5px;
-        }
-
-        .card.feature-card p {
-            font-size: 0.95em;
-            margin-bottom: 0;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        /* Form Input Styling */
-        #download-form input[type="text"] {
-            background: rgba(255, 255, 255, 0.08); /* Slightly transparent white for input background */
-            color: #ffffff;
-            border: 1px solid #382192; /* Primary variant border */
-            padding: 15px 20px;
-            border-radius: 10px; /* Rounded input fields */
-            width: calc(100% - 40px); /* Account for padding */
-            margin-bottom: 25px;
-            font-size: 1em;
-            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3); /* Inner shadow for depth */
-            transition: border-color 0.3s ease, background-color 0.3s ease;
-        }
-
-        #download-form input[type="text"]::placeholder {
-            color: rgba(255, 255, 255, 0.5); /* Lighter placeholder text */
-        }
-
-        #download-form input[type="text"]:focus {
-            border-color: #bb86fc; /* Highlight border on focus */
-            background-color: rgba(255, 255, 255, 0.15); /* Slightly less transparent on focus */
-            outline: none; /* Remove default outline */
-        }
-
-        /* Form Button Styling */
-        #download-form button[type="submit"],
-        #playlist-form button[type="submit"] { /* Apply to both download buttons */
-            background: linear-gradient(90deg, #bb86fc, #02dac5); /* Primary to Secondary gradient */
-            color: #121212; /* Dark text on bright button */
-            border: none;
-            padding: 15px 30px;
-            border-radius: 10px; /* Rounded button */
-            font-size: 1.1em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.1s ease-out, box-shadow 0.1s ease-out, background 0.3s ease; /* Faster transform for click feedback */
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            width: auto; /* Allow button to size to content */
-            margin-top: 20px; /* Space above for playlist form button */
-        }
-
-        #download-form button[type="submit"]:hover,
-        #playlist-form button[type="submit"]:hover {
-            transform: translateY(-3px); /* Lift effect on hover */
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
-            background: linear-gradient(90deg, #02dac5, #bb86fc); /* Reverse gradient on hover */
-        }
-
-        #download-form button[type="submit"]:active,
-        #playlist-form button[type="submit"]:active {
-            transform: translateY(0); /* Press down effect on click */
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); /* Less prominent shadow when pressed */
-        }
-
-        /* Error Message Styling */
-        .text-danger { /* New class for error messages */
-            color: #cf667a; /* Error color */
-            margin-top: 15px;
-            font-weight: bold;
-            opacity: 0; /* Hidden by default for fade-in */
-            transition: opacity 0.5s ease-in-out;
-        }
-        .text-danger.show {
-            opacity: 1;
-        }
-
-        /* Progress Bar Container */
-        #progress-bar {
-            background-color: rgba(255, 255, 255, 0.1); /* Transparent background for the bar track */
-            border-radius: 10px;
-            height: 15px;
-            margin-top: 30px;
-            overflow: hidden; /* Ensures fill stays within bounds */
-            position: relative;
-            display: none; /* Hidden by default, shown by JS */
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3); /* Inner shadow */
-        }
-
-        /* Progress Bar Fill */
-        #progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #bb86fc, #02dac5); /* Primary to Secondary gradient for fill */
-            border-radius: 10px;
-            width: 0%; /* Controlled by JS */
-            transition: width 0.5s ease-out; /* Smooth width transition */
-        }
-
-        /* Progress Percentage Text (moved to below the bar) */
-        #progress-percentage-text {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 0.9em;
-            font-weight: bold;
-            text-align: center; /* Center below the bar */
-            margin-top: 10px; /* Space from the bar */
-            display: none; /* Hidden by default, shown by JS */
-            opacity: 0; /* Hidden by default for fade-in */
-            transition: opacity 0.5s ease-in-out;
-        }
-        #progress-percentage-text.show {
-            opacity: 1;
-        }
-
-        /* Progress Message */
-        #progress-message {
-            margin-top: 15px;
-            color: rgba(255, 255, 255, 0.7);
-            font-style: italic;
-            opacity: 0; /* Hidden by default for fade-in */
-            transition: opacity 0.5s ease-in-out;
-        }
-        #progress-message.show {
-            opacity: 1;
-        }
-
-        /* Download Link Styling */
-        #download-link {
-            color: #02dac5; /* Secondary color for links */
-            text-decoration: none;
-            display: none; /* Hidden by default, shown by JS */
-            margin-top: 25px;
-            font-weight: bold;
-            font-size: 1.1em;
-            transition: color 0.3s ease, transform 0.3s ease;
-        }
-
-        #download-link:hover {
-            color: #bb86fc; /* Primary color on hover */
-            text-decoration: underline;
-            transform: scale(1.05); /* Slightly enlarge on hover */
-        }
-
-        /* Playlist Container Styling */
-        #playlist-container {
-            margin-top: 30px; /* Space from the previous elements */
-            text-align: left; /* Align content to the left */
-            /* This div is already inside .card.main-content, so it inherits some styling */
-            /* Add specific padding if needed, but its content will dictate size */
-        }
-
-        #playlist-container h2 {
-            color: #bb86fc; /* Primary color for this heading */
-            font-size: 1.8em;
-            margin-bottom: 20px;
-            text-align: center; /* Center this heading */
-        }
-
-        #song-list {
-            list-style: none; /* Remove default bullet points */
-            padding: 0;
-            margin: 0;
-            max-height: 300px; /* Limit height for scrollability */
-            overflow-y: auto; /* Enable scrolling for long lists */
-            background-color: rgba(255, 255, 255, 0.05); /* Slight background for the list */
-            border-radius: 10px;
-            padding: 15px;
-            border: 1px solid rgba(187, 134, 252, 0.15);
-        }
-
-        #song-list li {
-            display: flex; /* Use flexbox for checkbox and label alignment */
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08); /* Subtle separator */
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        #song-list li:last-child {
-            border-bottom: none; /* No border on the last item */
-        }
-
-        #song-list input[type="checkbox"] {
-            /* Hide default checkbox */
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #02dac5; /* Secondary color for checkbox border */
-            border-radius: 5px;
-            cursor: pointer;
-            margin-right: 10px;
-            position: relative;
-            flex-shrink: 0; /* Prevent shrinking */
-            transition: background-color 0.2s ease, border-color 0.2s ease;
-        }
-
-        #song-list input[type="checkbox"]:checked {
-            background-color: #02dac5; /* Secondary color when checked */
-            border-color: #02dac5;
-        }
-
-        #song-list input[type="checkbox"]:checked::after {
-            content: '✔'; /* Checkmark symbol */
-            display: block;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #121212; /* Dark color for checkmark */
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        #song-list label {
-            cursor: pointer;
-            flex-grow: 1; /* Allow label to take available space */
-            font-size: 0.95em;
-            word-break: break-word; /* Break long song titles */
-        }
-
-        /* Responsive Design Considerations */
-        @media (max-width: 992px) { /* Tablet and smaller */
-            .main-layout {
-                flex-direction: column; /* Stack cards vertically */
-                align-items: center; /* Center stacked cards */
-                gap: 25px; /* Reduced gap for smaller screens */
-            }
-
-            .card.main-content,
-            .features-column {
-                flex-basis: 90%; /* Take more width when stacked */
-                max-width: 500px; /* Constrain max width even when stacked */
-                width: 100%;
-            }
-
-            /* Adjust main content card's internal layout for stacked view */
-            .card.main-content {
-                justify-content: flex-start; /* Reset vertical distribution when stacked */
-            }
-        }
-
-        @media (max-width: 600px) { /* Small mobile devices */
-            body {
-                padding: 15px; /* Reduce overall body padding */
-            }
-
-            .card {
-                padding: 25px 20px; /* Adjust card padding for smaller screens */
-                margin: 0; /* Remove side margin as body padding handles it */
-                border-radius: 15px; /* Slightly less rounded corners */
-            }
-
-            h1 {
-                font-size: 1.8em; /* Smaller heading */
-            }
-
-            p {
-                font-size: 0.85em; /* Smaller paragraph text */
-                margin-bottom: 15px;
-            }
-
-            .card.feature-card h2 {
-                font-size: 1.3em; /* Smaller feature heading */
-            }
-
-            .card.feature-card p {
-                font-size: 0.8em;
-            }
-
-            #download-form input[type="text"] {
-                width: calc(100% - 20px); /* Adjust for smaller padding */
-                padding: 10px;
-                font-size: 0.85em;
-                margin-bottom: 20px;
-            }
-
-            #download-form button[type="submit"],
-            #playlist-form button[type="submit"] {
-                padding: 10px 20px;
-                font-size: 0.95em;
-            }
-
-            /* Progress bar and text adjustments for very small screens */
-            #progress-bar {
-                margin-top: 20px; /* Reduce top margin */
-            }
-
-            #progress-percentage-text {
-                font-size: 0.8em;
-                margin-top: 8px; /* Closer to the bar */
-            }
-
-            #progress-message {
-                margin-top: 10px; /* Closer to percentage text */
-                font-size: 0.8em;
-            }
-
-            /* Playlist container specific mobile adjustments */
-            #playlist-container h2 {
-                font-size: 1.5em; /* Adjust heading size */
-                margin-bottom: 15px;
-            }
-            #song-list {
-                padding: 10px;
-            }
-            #song-list li {
-                padding: 8px 0;
-            }
-            #song-list input[type="checkbox"] {
-                width: 18px;
-                height: 18px;
-                margin-right: 8px;
-            }
-            #song-list input[type="checkbox"]:checked::after {
-                font-size: 12px;
-            }
-            #song-list label {
-                font-size: 0.85em;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
     <div class="main-layout">
         <div id="container" class="card main-content">
-            <h1>Spotify Downloader</h1>
-            <p>Download your favorite Spotify tracks or entire playlists as high-quality MP3s in a convenient ZIP file.</p>
+            <h1>Spotify Digger</h1>
+            <p>Download your favorite Spotify tracks or entire playlists as high-quality MP3s in a convenient ZIP file.
+            </p>
             <form method="POST" id="download-form">
                 <div>
-                    <input type="text" name="spotify_url" placeholder="e.g., https://open.spotify.com/playlist/..." required>
+                    <input type="text" name="spotify_url" placeholder="e.g., https://open.spotify.com/playlist/..."
+                        required>
                 </div>
                 <button type="submit">Download</button>
             </form>
-            <!-- The error block below is dynamic and depends on server-side rendering. -->
             {% if error %}
             <p class="text-danger show">{{ error }}</p>
             {% endif %}
@@ -441,186 +29,167 @@
                 <h2>Select Songs to Download</h2>
                 <form id="playlist-form">
                     <ul id="song-list">
-                        <!-- Dummy data for demonstration -->
-                        <li>
-                            <input type="checkbox" id="song-dummy1" name="selected_songs" value='{"name": "Song Title One", "artist": "Artist A"}' checked>
-                            <label for="song-dummy1">Song Title One - Artist A</label>
-                        </li>
-                        <li>
-                            <input type="checkbox" id="song-dummy2" name="selected_songs" value='{"name": "Another Great Track by Artist B", "artist": "Artist B"}' checked>
-                            <label for="song-dummy2">Another Great Track by Artist B - Artist B</label>
-                        </li>
-                        <li>
-                            <input type="checkbox" id="song-dummy3" name="selected_songs" value='{"name": "Long Song Name That Goes On And On And On For Testing Purposes", "artist": "Artist C"}' checked>
-                            <label for="song-dummy3">Long Song Name That Goes On And On And On For Testing Purposes - Artist C</label>
-                        </li>
-                        <li>
-                            <input type="checkbox" id="song-dummy4" name="selected_songs" value='{"name": "Just A Song", "artist": "Artist D"}' checked>
-                            <label for="song-dummy4">Just A Song - Artist D</label>
-                        </li>
-                        <li>
-                            <input type="checkbox" id="song-dummy5" name="selected_songs" value='{"name": "Final Track", "artist": "Artist E"}' checked>
-                            <label for="song-dummy5">Final Track - Artist E</label>
-                        </li>
                     </ul>
                     <button type="submit">Download Selected</button>
                 </form>
             </div>
-        
+
             <div id="progress-bar">
                 <div role="progressbar" style="width: 0%;" id="progress-fill"></div>
             </div>
-            <span id="progress-percentage-text">0%</span> <!-- Percentage text below the bar -->
+            <span id="progress-percentage-text">0%</span> 
             <p id="progress-message"></p>
             <a href="/download" id="download-link" style="display: none;">Download ZIP</a>
         </div>
-        
+
         <div class="features-column">
             <div class="card feature-card">
                 <h2>📈 Efficient Batch Downloads</h2>
-                <p>Easily download multiple tracks or entire playlists in one go. Our intelligent system handles large queues efficiently, ensuring a smooth experience.</p>
+                <p>Easily download multiple tracks or entire playlists in one go. Our intelligent system handles large
+                    queues efficiently, ensuring a smooth experience.</p>
             </div>
             <div class="card feature-card">
                 <h2>🤖 AI-Powered Suggestions</h2>
-                <p>Leverage our experimental AI feature to receive tailored track suggestions based on your listening habits and download history. (Coming soon!)</p>
+                <p>Leverage our experimental AI feature to receive tailored track suggestions based on your listening
+                    habits and download history. (Coming soon!)</p>
             </div>
         </div>
     </div>
 
-<script>
-    $(document).ready(function() {
+    <script>
+        $(document).ready(function () {
 
-    $("#download-form").submit(function(e) {
-        e.preventDefault();
-        const url = $('input[name="spotify_url"]').val();
+            $("#download-form").submit(function (e) {
+                e.preventDefault();
+                const url = $('input[name="spotify_url"]').val();
 
-        // Clear previous messages and hide relevant sections on new submission
-        $("#progress-message").removeClass("text-danger show").text("");
-        $("#download-link").hide();
-        $("#progress-bar").hide();
-        $("#progress-percentage-text").hide().removeClass("show").text("0%");
-        $("#progress-fill").css("width", "0%");
-        $("#playlist-container").hide(); // Ensure playlist container is hidden initially
 
-        // Check if it's a playlist URL
-        if (url.includes("/playlist/")) {
-            fetchPlaylistTracks(url);
-        } else if (url.includes("/track/")) {
-            // If it's a single track, proceed with download directly
-            const songName = url; // Assuming your Flask backend can parse this as a single track download
-            startDownloadTask({ songs: [{ name: songName, artist: "Unknown Artist" }] }); // Provide a basic structure
-        } else {
-            $("#progress-message").addClass("text-danger show").text("Please enter a valid Spotify track or playlist URL.");
-        }
-    });
+                $("#progress-message").removeClass("text-danger show").text("");
+                $("#download-link").hide();
+                $("#progress-bar").hide();
+                $("#progress-percentage-text").hide().removeClass("show").text("0%");
+                $("#progress-fill").css("width", "0%");
+                $("#playlist-container").hide();
 
-    function fetchPlaylistTracks(url) {
-        $("#progress-message").text("Fetching playlist tracks...").addClass("show");
-        $.ajax({
-            url: '/list_tracks',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({ 'spotify_url': url }),
-            success: function(data) {
-                if (data.tracks && data.tracks.length > 0) {
-                    displayTracks(data.tracks);
-                    $("#progress-message").removeClass("show").text(""); // Clear message on success
+
+                if (url.includes("/playlist/")) {
+                    fetchPlaylistTracks(url);
+                } else if (url.includes("/track/")) {
+
+                    const songName = url;
+                    startDownloadTask({ songs: [{ name: songName, artist: "Unknown Artist" }] });
                 } else {
-                    // Handle case where playlist is empty or private
-                    $("#progress-message").addClass("text-danger show").text("Playlist is empty or private. No tracks to display.");
+                    $("#progress-message").addClass("text-danger show").text("Please enter a valid Spotify track or playlist URL.");
                 }
-            },
-            error: function(xhr, status, error) {
-                const errorMessage = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : "Failed to fetch playlist tracks. Please check the URL or try again.";
-                $("#progress-message").addClass("text-danger show").text(errorMessage);
+            });
+
+            function fetchPlaylistTracks(url) {
+                $("#progress-message").text("Fetching playlist tracks...").addClass("show");
+                $.ajax({
+                    url: '/list_tracks',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ 'spotify_url': url }),
+                    success: function (data) {
+                        if (data.tracks && data.tracks.length > 0) {
+                            displayTracks(data.tracks);
+                            $("#progress-message").removeClass("show").text("");
+                        } else {
+
+                            $("#progress-message").addClass("text-danger show").text("Playlist is empty or private. No tracks to display.");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        const errorMessage = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : "Failed to fetch playlist tracks. Please check the URL or try again.";
+                        $("#progress-message").addClass("text-danger show").text(errorMessage);
+                    }
+                });
             }
-        });
-    }
 
-    function displayTracks(tracks) {
-        $("#download-form").hide(); // Hide the initial form
-        const $songList = $("#song-list");
-        $songList.empty(); // Clear any previous list
+            function displayTracks(tracks) {
+                $("#download-form").hide();
+                const $songList = $("#song-list");
+                $songList.empty();
 
-        tracks.forEach((track, index) => {
-            const listItem = `
+                tracks.forEach((track, index) => {
+                    const listItem = `
                 <li>
                     <input type="checkbox" id="song-${index}" name="selected_songs" value='${JSON.stringify(track)}' checked>
                     <label for="song-${index}">${track.name} - ${track.artist}</label>
                 </li>
             `;
-            $songList.append(listItem);
-        });
+                    $songList.append(listItem);
+                });
 
-        $("#playlist-container").show(); // Show the new playlist form
+                $("#playlist-container").show();
 
-        // Handle the submission of the new playlist form
-        $("#playlist-form").off('submit').on('submit', function(e) {
-            e.preventDefault();
-            const selectedSongs = [];
-            $('input[name="selected_songs"]:checked').each(function() {
-                selectedSongs.push(JSON.parse($(this).val()));
-            });
 
-            if (selectedSongs.length > 0) {
-                startDownloadTask({ songs: selectedSongs });
-            } else {
-                $("#progress-message").addClass("text-danger show").text("Please select at least one song to download.");
+                $("#playlist-form").off('submit').on('submit', function (e) {
+                    e.preventDefault();
+                    const selectedSongs = [];
+                    $('input[name="selected_songs"]:checked').each(function () {
+                        selectedSongs.push(JSON.parse($(this).val()));
+                    });
+
+                    if (selectedSongs.length > 0) {
+                        startDownloadTask({ songs: selectedSongs });
+                    } else {
+                        $("#progress-message").addClass("text-danger show").text("Please select at least one song to download.");
+                    }
+                });
             }
-        });
-    }
 
-    function startDownloadTask(payload) {
-        $("#download-form").hide();
-        $("#playlist-container").hide();
-        $("#progress-bar").show();
-        $("#progress-percentage-text").show().addClass("show");
-        $("#progress-message").text("Starting download...").addClass("show");
+            function startDownloadTask(payload) {
+                $("#download-form").hide();
+                $("#playlist-container").hide();
+                $("#progress-bar").show();
+                $("#progress-percentage-text").show().addClass("show");
+                $("#progress-message").text("Starting download...").addClass("show");
 
-        $.ajax({
-            url: '/download_selected',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(payload),
-            success: function(response) {
-                if (response.status === "download started") {
-                    pollProgress(); // Start polling for updates
-                } else {
-                    // Handle cases where backend indicates an issue before polling
-                    $("#progress-message").addClass("text-danger show").text(response.message || "Download could not be started.");
-                }
-            },
-            error: function(xhr, status, error) {
-                const errorMessage = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : "Error starting download task. Please try again.";
-                $("#progress-message").addClass("text-danger show").text(errorMessage);
+                $.ajax({
+                    url: '/download_selected',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(payload),
+                    success: function (response) {
+                        if (response.status === "download started") {
+                            pollProgress();
+                        } else {
+
+                            $("#progress-message").addClass("text-danger show").text(response.message || "Download could not be started.");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        const errorMessage = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : "Error starting download task. Please try again.";
+                        $("#progress-message").addClass("text-danger show").text(errorMessage);
+                    }
+                });
             }
-        });
-    }
 
-    function pollProgress() {
-        let interval = setInterval(function() {
-            $.get('/progress', function(data) {
-                let percent = (data.current / data.total) * 100 || 0;
-                $("#progress-fill").css("width", percent + "%");
-                $("#progress-percentage-text").text(Math.round(percent) + "%");
-                $("#progress-message").text(data.message);
+            function pollProgress() {
+                let interval = setInterval(function () {
+                    $.get('/progress', function (data) {
+                        let percent = (data.current / data.total) * 100 || 0;
+                        $("#progress-fill").css("width", percent + "%");
+                        $("#progress-percentage-text").text(Math.round(percent) + "%");
+                        $("#progress-message").text(data.message);
 
-                if (data.status === "done") {
-                    clearInterval(interval);
-                    $("#download-link").show();
-                    $("#progress-message").removeClass("show");
-                } else if (data.status === "error") {
-                    clearInterval(interval);
-                    $("#progress-message").addClass("text-danger show").text("Download failed: " + data.message);
-                    $("#download-link").hide();
-                }
-            }).fail(function() {
-                clearInterval(interval);
-                $("#progress-message").addClass("text-danger show").text("Failed to get progress updates. Please check your connection.");
-            });
-        }, 1000);
-    }
-    });
-</script>
+                        if (data.status === "done") {
+                            clearInterval(interval);
+                            $("#download-link").show();
+                            $("#progress-message").removeClass("show");
+                        } else if (data.status === "error") {
+                            clearInterval(interval);
+                            $("#progress-message").addClass("text-danger show").text("Download failed: " + data.message);
+                            $("#download-link").hide();
+                        }
+                    }).fail(function () {
+                        clearInterval(interval);
+                        $("#progress-message").addClass("text-danger show").text("Failed to get progress updates. Please check your connection.");
+                    });
+                }, 1000);
+            }
+       })
+    </script>
 </body>
 </html>

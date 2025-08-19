@@ -1,0 +1,421 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #121212;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+
+.main-layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    max-width: 1200px;
+    width: 100%;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+
+.card {
+    background-color: rgba(30, 18, 56, 0.9);
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    padding: 40px;
+    box-sizing: border-box;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(187, 134, 252, 0.1);
+    flex-grow: 1;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+    border-color: rgba(187, 134, 252, 0.3);
+}
+
+
+.card.main-content {
+    flex-basis: 45%;
+    min-width: 350px;
+    max-width: 500px;
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.features-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex-basis: 45%;
+    min-width: 350px;
+    max-width: 500px;
+}
+
+.card.feature-card {
+    padding: 30px;
+    text-align: left;
+    background-color: rgba(30, 18, 56, 0.7);
+    border: 1px solid rgba(56, 33, 146, 0.2);
+}
+
+
+h1 {
+    color: #bb86fc;
+    margin-bottom: 15px;
+    font-size: 2.5em;
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(187, 134, 252, 0.5);
+}
+
+
+p {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.card.feature-card h2 {
+    color: #02dac5;
+    font-size: 1.8em;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+}
+
+.card.feature-card p {
+    font-size: 0.95em;
+    margin-bottom: 0;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+
+#download-form input[type="text"] {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    border: 1px solid #382192;
+    padding: 15px 20px;
+    border-radius: 10px;
+    width: calc(100% - 40px);
+    margin-bottom: 25px;
+    font-size: 1em;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3);
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+#download-form input[type="text"]::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+#download-form input[type="text"]:focus {
+    border-color: #bb86fc;
+    background-color: rgba(255, 255, 255, 0.15);
+    outline: none;
+}
+
+
+#download-form button[type="submit"],
+#playlist-form button[type="submit"] {
+    background: linear-gradient(90deg, #bb86fc, #02dac5);
+    color: #121212;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.1s ease-out, box-shadow 0.1s ease-out, background 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    width: auto;
+    margin-top: 20px;
+}
+
+#download-form button[type="submit"]:hover,
+#playlist-form button[type="submit"]:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(90deg, #02dac5, #bb86fc);
+}
+
+#download-form button[type="submit"]:active,
+#playlist-form button[type="submit"]:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+
+.text-danger {
+    color: #cf667a;
+    margin-top: 15px;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.text-danger.show {
+    opacity: 1;
+}
+
+
+#progress-bar {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    height: 15px;
+    margin-top: 30px;
+    overflow: hidden;
+    position: relative;
+    display: none;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+
+#progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #bb86fc, #02dac5);
+    border-radius: 10px;
+    width: 0%;
+    transition: width 0.5s ease-out;
+}
+
+
+#progress-percentage-text {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.9em;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+#progress-percentage-text.show {
+    opacity: 1;
+}
+
+
+#progress-message {
+    margin-top: 15px;
+    color: rgba(255, 255, 255, 0.7);
+    font-style: italic;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+#progress-message.show {
+    opacity: 1;
+}
+
+
+#download-link {
+    color: #02dac5;
+    text-decoration: none;
+    display: none;
+    margin-top: 25px;
+    font-weight: bold;
+    font-size: 1.1em;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+#download-link:hover {
+    color: #bb86fc;
+    text-decoration: underline;
+    transform: scale(1.05);
+}
+
+
+#playlist-container {
+    margin-top: 30px;
+    text-align: left;
+
+
+}
+
+#playlist-container h2 {
+    color: #bb86fc;
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+#song-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 300px;
+    overflow-y: auto;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 15px;
+    border: 1px solid rgba(187, 134, 252, 0.15);
+}
+
+#song-list li {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+#song-list li:last-child {
+    border-bottom: none;
+}
+
+#song-list input[type="checkbox"] {
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #02dac5;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+    position: relative;
+    flex-shrink: 0;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+#song-list input[type="checkbox"]:checked {
+    background-color: #02dac5;
+    border-color: #02dac5;
+}
+
+#song-list input[type="checkbox"]:checked::after {
+    content: '✔';
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #121212;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+#song-list label {
+    cursor: pointer;
+    flex-grow: 1;
+    font-size: 0.95em;
+    word-break: break-word;
+}
+
+
+@media (max-width: 992px) {
+    .main-layout {
+        flex-direction: column;
+        align-items: center;
+        gap: 25px;
+    }
+
+    .card.main-content,
+    .features-column {
+        flex-basis: 90%;
+        max-width: 500px;
+        width: 100%;
+    }
+
+
+    .card.main-content {
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 15px;
+    }
+
+    .card {
+        padding: 25px 20px;
+        margin: 0;
+        border-radius: 15px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    p {
+        font-size: 0.85em;
+        margin-bottom: 15px;
+    }
+
+    .card.feature-card h2 {
+        font-size: 1.3em;
+    }
+
+    .card.feature-card p {
+        font-size: 0.8em;
+    }
+
+    #download-form input[type="text"] {
+        width: calc(100% - 20px);
+        padding: 10px;
+        font-size: 0.85em;
+        margin-bottom: 20px;
+    }
+
+    #download-form button[type="submit"],
+    #playlist-form button[type="submit"] {
+        padding: 10px 20px;
+        font-size: 0.95em;
+    }
+
+
+    #progress-bar {
+        margin-top: 20px;
+    }
+
+    #progress-percentage-text {
+        font-size: 0.8em;
+        margin-top: 8px;
+    }
+
+    #progress-message {
+        margin-top: 10px;
+        font-size: 0.8em;
+    }
+
+
+    #playlist-container h2 {
+        font-size: 1.5em;
+        margin-bottom: 15px;
+    }
+
+    #song-list {
+        padding: 10px;
+    }
+
+    #song-list li {
+        padding: 8px 0;
+    }
+
+    #song-list input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        margin-right: 8px;
+    }
+
+    #song-list input[type="checkbox"]:checked::after {
+        font-size: 12px;
+    }
+
+    #song-list label {
+        font-size: 0.85em;
+    }
+}
